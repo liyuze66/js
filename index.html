@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健身视频合集</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+        .menu li {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .menu li:hover {
+            background-color: #388E3C;
+        }
+        .video-container {
+            margin-top: 30px;
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .video-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .video-list li {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .video-list li:hover {
+            background-color: #e0e0e0;
+        }
+        .video-player {
+            margin-top: 20px;
+        }
+        #directoryTitle {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background-color: #388E3C;
+        }
+    </style>
+</head>
+<body>
+    <h1>健身视频合集</h1>
+    
+    <!-- 目录列表 -->
+    <ul class="menu">
+        <li onclick="showVideos('力量训练')">力量训练</li>
+        <li onclick="showVideos('有氧运动')">有氧运动</li>
+        <li onclick="showVideos('瑜伽')">瑜伽</li>
+        <li onclick="showVideos('拉伸放松')">拉伸放松</li>
+    </ul>
+    
+    <!-- 视频容器 -->
+    <div class="video-container" id="videoContainer">
+        <h2 id="directoryTitle">视频列表</h2>
+        <a class="back-button" onclick="goBack()">返回目录</a >
+        <ul class="video-list" id="videoList">
+            <!-- 视频列表将通过JavaScript动态加载 -->
+        </ul>
+        <div class="video-player">
+            <!-- 这里使用B站的嵌入代码 -->
+            <iframe id="videoPlayer" width="640" height="360" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // 视频数据（实际应用中可以从服务器获取）
+        const videoData = {
+            '力量训练': [
+                { title: '新手哑铃训练指南', url: 'https://your-storage-url/健身/力量训练/哑铃训练.mp4' },
+                { title: '深蹲技术详解', url: 'https://your-storage-url/健身/力量训练/深蹲技术.mp4' },
+                { title: '卧推训练技巧', url: 'https://your-storage-url/健身/力量训练/卧推训练.mp4' },
+                { title: '核心肌群训练', url: 'https://your-storage-url/健身/力量训练/核心训练.mp4' }
+            ],
+            '有氧运动': [
+                { 
+                    title: '30分钟全程站立有氧燃脂操', 
+                    url: '//player.bilibili.com/player.html?bvid=BV1sA411Q7R3&page=1' 
+                },
+                { title: '室内跑步机训练', url: 'https://your-storage-url/健身/有氧运动/跑步机训练.mp4' },
+                { title: '动感单车训练', url: 'https://your-storage-url/健身/有氧运动/动感单车.mp4' },
+                { title: '跳绳训练基础', url: 'https://your-storage-url/健身/有氧运动训练.mp4' }
+            ],
+            '瑜伽': [
+                { title: '初学者瑜伽入门', url: 'https://your-storage-url/健身/瑜伽/初学者瑜伽.mp4' },
+                { title: '舒缓压力的瑜伽', url: 'https://your-storage-url/健身/瑜伽/舒缓压力.mp4' },
+                { title: '提高柔韧性的瑜伽', url: 'https://your-storage-url/健身/瑜伽/柔韧性训练.mp4' },
+                { title: '瑜伽冥想放松', url: 'https://your-storage-url/健身/瑜伽/冥想放松.mp4' }
+            ],
+            '拉伸放松': [
+                { title: '全身拉伸放松', url: 'https://your-storage-url/健身/拉伸放松/全身拉伸.mp4' },
+                { title: '跑步后拉伸', url: 'https://your-storage-url/健身/拉伸放松/跑步拉伸.mp4' },
+                { title: '办公室久坐拉伸', url: 'https://your-storage-url/健身/拉伸放松/久坐拉伸.mp4' },
+                { title: '运动前热身伸展', url: 'https://your-storage-url/健身/拉伸放松/热身伸展.mp4' }
+            ]
+        };
+
+        // 显示视频列表
+        function showVideos(directory) {
+            const videoContainer = document.getElementById('videoContainer');
+            const videoList = document.getElementById('videoList');
+            const directoryTitle = document.getElementById('directoryTitle');
+            
+            // 清空视频列表
+            videoList.innerHTML = '';
+            
+            // 设置目录标题
+            directoryTitle.textContent = directory;
+            
+            // 加载视频数据
+            videoData[directory].forEach(video => {
+                const li = document.createElement('li');
+                li.textContent = video.title;
+                li.onclick = function() {
+                    playVideo(video.url);
+                };
+                videoList.appendChild(li);
+            });
+            
+            // 显示视频容器
+            videoContainer.style.display = 'block';
+        }
+
+        // 播放视频
+        function playVideo(videoUrl) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.src = videoUrl;
+            videoPlayer.src = videoUrl;
+        }
+
+        // 返回目录
+        function goBack() {
+            const videoContainer = document.getElementById('videoContainer');
+            videoContainer.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
